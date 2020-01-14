@@ -102,11 +102,12 @@ public class SettingsValues {
     }
 
     public boolean isLanguageSwitchKeyEnabled() {
-        if (!mShowsLanguageSwitchKey) {
-            return false;
-        }
-        final RichInputMethodManager imm = RichInputMethodManager.getInstance();
-        return imm.hasMultipleEnabledIMEsOrSubtypes(false /* include aux subtypes */);
+        return true;
+//        if (!mShowsLanguageSwitchKey) {
+//            return false;
+//        }
+//        final RichInputMethodManager imm = RichInputMethodManager.getInstance();
+//        return imm.hasMultipleEnabledIMEsOrSubtypes(false /* include aux subtypes */);
     }
 
     public boolean isSameInputType(final EditorInfo editorInfo) {

@@ -43,16 +43,8 @@
         android:key="pref_keyboard_color"
         android:title="@string/keyboard_color" />
     <CheckBoxPreference
-        android:key="pref_matching_navbar_color"
-        android:title="@string/matching_navbar_color"
-        android:defaultValue="false" />
-    <CheckBoxPreference
         android:key="pref_hide_special_chars"
         android:title="@string/hide_special_chars"
-        android:defaultValue="false" />
-    <CheckBoxPreference
-        android:key="pref_hide_language_switch_key"
-        android:title="@string/hide_language_switch_key"
         android:defaultValue="false" />
     <CheckBoxPreference
         android:key="pref_show_number_row"

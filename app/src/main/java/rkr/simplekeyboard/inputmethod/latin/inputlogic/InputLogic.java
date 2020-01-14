@@ -203,7 +203,7 @@ public final class InputLogic {
                 // {@link #onPressKey(int,int,boolean)} and {@link #onReleaseKey(int,boolean)}.
                 break;
             case Constants.CODE_SETTINGS:
-                onSettingsKeyPressed();
+                //onSettingsKeyPressed();
                 break;
             case Constants.CODE_SHORTCUT:
                 // We need to switch to the shortcut IME. This is handled by LatinIME since the
@@ -381,7 +381,8 @@ public final class InputLogic {
      * Handle a press on the language switch key (the "globe key")
      */
     private void handleLanguageSwitchKey() {
-        mLatinIME.switchToNextSubtype();
+        //mLatinIME.switchToNextSubtype();
+        mLatinIME.launchVoice();
     }
 
     /**

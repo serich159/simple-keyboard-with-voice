@@ -75,7 +75,7 @@ public final class KeyboardId {
         mMode = params.mMode;
         mElementId = elementId;
         mEditorInfo = params.mEditorInfo;
-        mClobberSettingsKey = params.mNoSettingsKey;
+        mClobberSettingsKey = true; //params.mNoSettingsKey;
         mLanguageSwitchKeyEnabled = params.mLanguageSwitchKeyEnabled;
         mCustomActionLabel = (mEditorInfo.actionLabel != null)
                 ? mEditorInfo.actionLabel.toString() : null;

@@ -75,6 +75,7 @@ import rkr.simplekeyboard.inputmethod.latin.utils.LeakGuardHandlerWrapper;
 import rkr.simplekeyboard.inputmethod.latin.utils.ResourceUtils;
 import rkr.simplekeyboard.inputmethod.latin.utils.ViewLayoutUtils;
 
+import com.google.android.voiceime.VoiceRecognitionTrigger;
 /**
  * Input method implementation for Qwerty'ish keyboard.
  */
@@ -101,6 +102,8 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
     private final SubtypeState mSubtypeState = new SubtypeState();
 
     private AlertDialog mOptionsDialog;
+
+    private VoiceRecognitionTrigger mVoiceRecognitionTrigger;
 
     public final UIHandler mHandler = new UIHandler(this);
 
@@ -318,7 +321,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
                 richImm.setInputMethodAndSubtype(token, lastActiveSubtype);
                 return;
             }
-            richImm.switchToNextInputMethod(token, true /* onlyCurrentIme */);
+            richImm.switchToNextInputMethod(token, false /* CHANGED onlyCurrentIme */);
         }
     }
 
@@ -339,6 +342,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         super.onCreate();
 
         mHandler.onCreate();
+        mVoiceRecognitionTrigger = new VoiceRecognitionTrigger(this);
 
         // TODO: Resolve mutual dependencies of {@link #loadSettings()} and
         // {@link #resetDictionaryFacilitatorIfNecessary()}.
@@ -359,10 +363,22 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         AudioAndHapticFeedbackManager.getInstance().onSettingsChanged(currentSettingsValues);
     }
 
+    public void launchVoice() {
+        mVoiceRecognitionTrigger.startVoiceRecognition(getImeLanguage());
+    }
+    private String getImeLanguage() {
+        return "en-US";
+    }
+
     @Override
     public void onDestroy() {
         mSettings.onDestroy();
         unregisterReceiver(mRingerModeChangeReceiver);
+        if (mVoiceRecognitionTrigger != null) {
+            // To avoid service leak, the trigger has to be unregistered when
+            // the IME is destroyed.
+            mVoiceRecognitionTrigger.unregister(this);
+        }
         super.onDestroy();
     }
 
@@ -411,6 +427,11 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
     @Override
     public void onStartInputView(final EditorInfo editorInfo, final boolean restarting) {
         mHandler.onStartInputView(editorInfo, restarting);
+        if (mVoiceRecognitionTrigger != null) {
+            // This method call is required for pasting the recognition results into the TextView
+            // when the recognition is done using the Intent API.
+            mVoiceRecognitionTrigger.onStartInputView();
+        }
     }
 
     @Override
@@ -791,11 +812,11 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
     // TODO: Revise the language switch key behavior to make it much smarter and more reasonable.
     public void switchToNextSubtype() {
         final IBinder token = getWindow().getWindow().getAttributes().token;
-        if (shouldSwitchToOtherInputMethods()) {
+        //if (shouldSwitchToOtherInputMethods()) {
             mRichImm.switchToNextInputMethod(token, false /* onlyCurrentIme */);
             return;
-        }
-        mSubtypeState.switchSubtype(token, mRichImm);
+        //}
+        //mSubtypeState.switchSubtype(token, mRichImm);
     }
 
     // TODO: Instead of checking for alphabetic keyboard here, separate keycodes for
@@ -1073,12 +1094,13 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         // TODO: Revisit here to reorganize the settings. Probably we can/should use different
         // strategy once the implementation of
         // {@link InputMethodManager#shouldOfferSwitchingToNextInputMethod} is defined well.
-        final IBinder token = getWindow().getWindow().getAttributes().token;
-        if (token == null) {
-            return false;
-        }
-        final boolean overrideValue = mSettings.getCurrent().isLanguageSwitchKeyEnabled();
-        return mRichImm.shouldOfferSwitchingToNextInputMethod(token) && overrideValue;
+        return true;
+//        final IBinder token = getWindow().getWindow().getAttributes().token;
+//        if (token == null) {
+//            return false;
+//        }
+//        final boolean overrideValue = mSettings.getCurrent().isLanguageSwitchKeyEnabled();
+//        return mRichImm.shouldOfferSwitchingToNextInputMethod(token) && overrideValue;
     }
 
     private void setNavigationBarColor() {

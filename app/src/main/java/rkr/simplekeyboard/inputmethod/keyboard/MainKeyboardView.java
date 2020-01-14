@@ -626,17 +626,17 @@ public final class MainKeyboardView extends KeyboardView implements MoreKeysPane
     private String layoutLanguageOnSpacebar(final Paint paint,
             final RichInputMethodSubtype subtype, final int width) {
         // Choose appropriate language name to fit into the width.
-        if (mLanguageOnSpacebarFormatType == LanguageOnSpacebarUtils.FORMAT_TYPE_FULL_LOCALE) {
-            final String fullText = subtype.getFullDisplayName();
-            if (fitsTextIntoWidth(width, fullText, paint)) {
-                return fullText;
-            }
-        }
-
-        final String middleText = subtype.getMiddleDisplayName();
-        if (fitsTextIntoWidth(width, middleText, paint)) {
-            return middleText;
-        }
+//        if (mLanguageOnSpacebarFormatType == LanguageOnSpacebarUtils.FORMAT_TYPE_FULL_LOCALE) {
+//            final String fullText = subtype.getFullDisplayName();
+//            if (fitsTextIntoWidth(width, fullText, paint)) {
+//                return fullText;
+//            }
+//        }
+//
+//        final String middleText = subtype.getMiddleDisplayName();
+//        if (fitsTextIntoWidth(width, middleText, paint)) {
+//            return middleText;
+//        }
 
         return "";
     }
